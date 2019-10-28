@@ -1,0 +1,28 @@
+{
+  "name": "@ayunoshev/spinner-button",
+  "version": "0.1.4",
+  "description": "Spinner button web component",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexey-yunoshev/spinner-button.git"
+  },
+  "keywords": [
+    "spinner",
+    "button",
+    "web-component"
+  ],
+  "author": "Alexey Yunoshev <alexey.yunoshev@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/alexey-yunoshev/spinner-button/issues"
+  },
+  "homepage": "https://github.com/alexey-yunoshev/spinner-button#readme",
+  "devDependencies": {
+    "typescript": "^3.6.4"
+  }
+}
