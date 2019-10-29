@@ -8,7 +8,7 @@ Attributes:
 * **primary-color** the color of the text. Default is white;
 * **secondary-color** the color of the background. Default is #1AAFD0;
 * **border-color** - the color of the border. Default is transparent;
-
+* **disabled** - if present, will make the button disabled
 ### Installation
 ```shell script
 $ npm install @ayunoshev/spinner-button

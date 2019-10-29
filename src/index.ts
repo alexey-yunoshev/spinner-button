@@ -123,6 +123,8 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
     `;
 
   class AppSpinnerButton extends HTMLElement {
+    button: HTMLButtonElement;
+
     constructor() {
       super();
       const shadow = this.attachShadow({mode: 'open'});
@@ -130,6 +132,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
       container.innerHTML = template;
       shadow.appendChild(container);
       const button = container.getElementsByTagName('button')[0];
+      this.button = button;
       const outerSpinner = container.getElementsByClassName('outer-spinner')[0] as HTMLDivElement;
       const innerSpinner = container.getElementsByClassName('inner-spinner')[0] as HTMLDivElement;
       const spinnerWrappers = Array.from(container.getElementsByClassName('spinner-wrapper') as HTMLCollectionOf<HTMLDivElement>);
@@ -173,7 +176,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
       button.addEventListener('click', reshape);
     }
 
-    connectedCallback() {
+    updateProperties() {
       this.style.setProperty(
         '--primary-color',
         this.getAttribute('primary-color') || 'white');
@@ -184,6 +187,31 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
         '--border-color',
         this.getAttribute('border-color') || 'transparent');
     }
+
+    connectedCallback() {
+      this.updateProperties();
+    }
+
+    static observedAttributes = ['primary-color', 'secondary-color', 'border-color', 'disabled'];
+
+    attributeChangedCallback(name: string, oldValue: string, newValue: string) {
+      if (name === 'disabled') {
+        if (oldValue === null && newValue !== null) {
+          this.button.setAttribute('disabled', '');
+          this.button.style.cursor = 'not-allowed';
+        } else if (oldValue !== null && newValue == null) {
+          this.button.removeAttribute('disabled');
+          this.button.style.cursor = 'pointer';
+        }
+      } else {
+        this.updateProperties();
+      }
+    }
+
+    disconnectedCallback() {
+      // TODO remove event listener from button to avoid memory leak
+    }
+
   }
 
   try {
