@@ -51,7 +51,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
           }
 
           button::after {
-              animation: rotate .7s linear infinite;
+              animation: outer .7s linear infinite;
               content: " ";
               border-radius: 50%;
               border-width: 2px;
