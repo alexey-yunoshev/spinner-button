@@ -9,7 +9,12 @@ Attributes:
 * **secondary-color** the color of the background. Default is #1AAFD0;
 * **border-color** - the color of the border. Default is transparent;
 
-### Examples
+### Installation
+```shell script
+$ npm install @ayunoshev/spinner-button
+```
+
+### Usage
 
 #### With ES modules
 ```html
