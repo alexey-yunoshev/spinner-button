@@ -5,8 +5,9 @@
 [Codepen](https://codepen.io/alexey-yunoshev/pen/ZEEJmKJ)
 
 Attributes:
-* **primary-color** the color of the border and text. Default is white;
+* **primary-color** the color of the text. Default is white;
 * **secondary-color** the color of the background. Default is #1AAFD0;
+* **border-color** - the color of the border. Default is transparent;
 
 ### Examples
 

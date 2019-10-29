@@ -3,7 +3,8 @@
 <head>
   <title>Example</title>
   <script type="module">
-      import {registerSpinnerButtonComponent} from "./node_modules/@ayunoshev/spinner-button/dist/index.js";
+      // import {registerSpinnerButtonComponent} from "./node_modules/@ayunoshev/spinner-button/dist/index.js";
+      import {registerSpinnerButtonComponent} from "../dist/index.js";
 
       registerSpinnerButtonComponent();
       registerSpinnerButtonComponent('spinner-button');
@@ -12,11 +13,12 @@
 <body
     style="background-color:black;
            display: grid;
-           grid-template-columns: repeat(2, max-content);
+           grid-template-columns: repeat(3, max-content);
            grid-gap: 20px">
 
-<app-spinner-button id="btn">call api</app-spinner-button>
-<spinner-button primary-color="#c3003a" secondary-color="black">submit</spinner-button>
+<app-spinner-button id="btn">Call api</app-spinner-button>
+<spinner-button primary-color="#c3003a" secondary-color="black" border-color="red">Submit</spinner-button>
+<spinner-button>A very long button</spinner-button>
 
 <script>
     document.getElementById('btn').addEventListener('click', () => {

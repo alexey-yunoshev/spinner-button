@@ -3,155 +3,175 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
   /**
    * A spinner button
    *
-   * primary-color - the color of the border and text. Default is white;
+   * primary-color - the color of the text. Default is white;
    * secondary-color - the color of the background. Default is #1AAFD0;
+   * border-color - the color of the border. Default is transparet;
    *
    */
+
+    // language=html
+  const template = `
+        <style>
+          * {
+            box-sizing: border-box;
+            margin: 0;
+          }
+
+          .container {
+            display: grid;
+            place-items: center;
+            position: relative;
+          }
+
+          button {
+            background-color: var(--secondary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            cursor: pointer;
+            color: var(--primary-color);
+            font-family: Roboto, "Helvetica Neue", sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            height: 100%;
+            outline: none;
+            padding: 9px 19px;
+            position: relative;
+            transition: all 250ms, color 0s;
+            width: 100%;
+          }
+
+          .active button {
+            border-radius: 50%;
+            border-color: transparent;
+            color: transparent;
+            font-size: 0;
+          }
+
+          .spinner-wrapper {
+            display: grid;
+            height: 0;
+            left: 0;
+            place-items: center;
+            position: absolute;
+            top: 0;
+            width: 0;
+          }
+          
+          .outer-spinner {
+            animation: outer .6s linear infinite;
+            border-radius: 50%;
+            border-width: 2px;
+            border-style: solid;
+            border-color: transparent;
+            height: 0;
+            transition: all 450ms;
+            width: 0;
+          }
+
+
+          .active .outer-spinner {
+            border-color: var(--primary-color) transparent var(--primary-color) transparent;
+          }
+          
+          .inner-spinner {
+              animation: inner 1s linear infinite;
+              border-style: solid;
+              border-width: 1px;
+              border-radius: 50%;
+              border-color: transparent;
+              display: block;
+              transition: all 450ms;
+              width: 0;
+          }
+
+          .active .inner-spinner {
+              border-color: var(--primary-color) transparent var(--primary-color) transparent;
+          }
+
+          @keyframes outer {
+            0% {
+              transform: rotate(0) scale(1);
+            }
+            100% {
+              transform: rotate(360deg) scale(1);
+            }
+          }
+
+          @keyframes inner {
+            0% {
+              transform: rotate(0) scale(1);
+            }
+            100% {
+              transform: rotate(-360deg) scale(1);
+            }
+          }
+        </style>
+    
+       <div class="container">
+         <button>
+           <slot></slot>
+         </button>
+         <div class="spinner-wrapper">
+           <div class="outer-spinner">
+           </div>
+         </div>
+         <div class="spinner-wrapper">
+           <div class="inner-spinner">
+           </div>
+         </div>
+       </div>
+    `;
 
   class AppSpinnerButton extends HTMLElement {
     constructor() {
       super();
       const shadow = this.attachShadow({mode: 'open'});
       const container = document.createElement('div');
-      const style = document.createElement('style');
-      // language=css
-      style.textContent = `
-          * {
-              box-sizing: border-box;
-              margin: 0;
-          }
+      container.innerHTML = template;
+      shadow.appendChild(container);
+      const button = container.getElementsByTagName('button')[0];
+      const outerSpinner = container.getElementsByClassName('outer-spinner')[0] as HTMLDivElement;
+      const innerSpinner = container.getElementsByClassName('inner-spinner')[0] as HTMLDivElement;
+      const spinnerWrappers = Array.from(container.getElementsByClassName('spinner-wrapper') as HTMLCollectionOf<HTMLDivElement>);
 
-          div {
-              display: grid;
-              place-items: center;
-              width: fit-content;
-          }
-
-          button {
-              background-color: var(--secondary-color);
-              border: 1px solid var(--primary-color);
-              border-radius: 5px;
-              cursor: pointer;
-              color: var(--primary-color);
-              font-family: Helvetica, sans-serif;
-              font-weight: bold;
-              outline: none;
-              padding: 5px 10px;
-              position: relative;
-              text-transform: uppercase;
-              transition: all 250ms, color 0s;
-              width: fit-content;
-          }
-
-          .active {
-              border-radius: 50%;
-              border-color: transparent;
-              color: transparent;
-              font-size: 0;
-          }
-
-          button::after {
-              animation: outer .7s linear infinite;
-              content: " ";
-              border-radius: 50%;
-              border-width: 2px;
-              border-style: solid;
-              border-color: transparent;
-              display: block;
-              left: 45%;
-              /* Some hack to make height equal to the percentage we specified */
-              padding-bottom: 0;
-              position: absolute;
-              top: 25%;
-              transition: all 450ms;
-              width: 0;
-          }
-
-
-          button.active::after {
-              --size: 65%;
-              left: 9%;
-              border-color: var(--primary-color) transparent var(--primary-color) transparent;
-              padding-bottom: var(--size);
-              top: 7%;
-              width: var(--size);
-          }
-
-          button::before {
-              animation: inner 1s linear infinite;
-              content: " ";
-              border-style: solid;
-              border-width: 1px;
-              border-radius: 50%;
-              border-color: transparent;
-              display: block;
-              left: 45%;
-              padding-bottom: 0;
-              position: absolute;
-              top: 25%;
-              transition: all 450ms;
-              width: 0;
-          }
-
-          button.active::before {
-              --size: 47%;
-              left: 22%;
-              border-color: var(--primary-color) transparent var(--primary-color) transparent;
-              padding-bottom: var(--size);
-              top: 21%;
-              width: var(--size);
-          }
-
-          @keyframes outer {
-              0% {
-                  transform: rotate(0) scale(1);
-              }
-              50% {
-                  transform: rotate(180deg) scale(1.15);
-              }
-              100% {
-                  transform: rotate(360deg) scale(1);
-              }
-          }
-
-          @keyframes inner {
-              0% {
-                  transform: rotate(0) scale(1);
-              }
-              50% {
-                  transform: rotate(-180deg) scale(0.9);
-              }
-              100% {
-                  transform: rotate(-360deg) scale(1);
-              }
-          }
-      `;
-      shadow.appendChild(style);
-      const button = document.createElement('button');
-
-      /**
-       * Trying hard to make our spinner stay where it should
-       * Regrettably, even then the whole thing stays rather brittle
-       */
       function reshape() {
-        button.classList.add('active');
-        button.style.minHeight = `${button.clientHeight}px`;
-        button.style.maxHeight = `${button.clientHeight}px`;
-        // important for transition to work
-        button.style.width = `${button.clientWidth}px`;
-        // important for the spinner to stay in the center
-        container.style.minWidth = `${button.clientWidth}px`;
-        container.style.width = `${button.clientWidth}px`;
-        container.style.maxWidth = `${button.clientWidth}px`;
+        container.classList.add('active');
+        const height = button.clientHeight;
+        const width = button.clientWidth;
+        spinnerWrappers.forEach((wrapper) => {
+          wrapper.style.minHeight = `${height}px`;
+          wrapper.style.height = `${height}px`;
+          wrapper.style.maxHeight = `${height}px`;
 
-        button.style.width = `${button.clientHeight + 2}px`;
-        button.style.maxWidth = `${button.clientWidth + 2}px`;
+          wrapper.style.minWidth = `${width}px`;
+          wrapper.style.width = `${width}px`;
+          wrapper.style.maxWidth = `${width}px`;
+        });
+
+        button.style.minHeight = `${height}px`;
+        button.style.maxHeight = `${height}px`;
+        // important for transition to work
+        button.style.width = `${width}px`;
+        // important for the spinner to stay in the center
+        // if we don't do this, container size will change
+        container.style.minWidth = `${width}px`;
+        container.style.width = `${width}px`;
+        container.style.maxWidth = `${width}px`;
+        // I believe 2px are to make up for the border width
+        button.style.width = `${height + 2}px`;
+        button.style.padding = '0px';
+
+        const outerSpinnerSize = height * 0.8;
+        outerSpinner.style.height = `${outerSpinnerSize}px`;
+        outerSpinner.style.width = `${outerSpinnerSize}px`;
+
+        const innerSpinnerSize = height * 0.5;
+        innerSpinner.style.height = `${innerSpinnerSize}px`;
+        innerSpinner.style.width = `${innerSpinnerSize}px`;
         button.removeEventListener('click', reshape);
       }
+
       button.addEventListener('click', reshape);
-      button.appendChild(document.createElement('slot'));
-      container.appendChild(button);
-      shadow.appendChild(container);
     }
 
     connectedCallback() {
@@ -161,6 +181,9 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
       this.style.setProperty(
         '--secondary-color',
         this.getAttribute('secondary-color') || '#1AAFD0');
+      this.style.setProperty(
+        '--border-color',
+        this.getAttribute('border-color') || 'transparent');
     }
   }
 
