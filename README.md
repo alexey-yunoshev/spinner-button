@@ -66,3 +66,13 @@ import {CUSTOM_ELEMENTS_SCHEMA, NgModule} from '@angular/core';
 export class SomeModule {
 }
 ```
+
+Inside some component template of that module:
+```html
+<app-spinner-button [attr.disabled]="!form.valid"
+                    primary-color="var(--ic-color-text-medium)"
+                    secondary-color="var(--ic-color-secondary)">Submit
+</app-spinner-button>
+```
+If we are not going to dynamically change the colors, then there's no need to bind
+the attributes.

@@ -196,10 +196,10 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
       if (name === 'disabled') {
-        if (oldValue === null && newValue !== null) {
+        if (newValue !== null && newValue !== 'false') {
           this.button.setAttribute('disabled', '');
           this.button.style.cursor = 'not-allowed';
-        } else if (oldValue !== null && newValue == null) {
+        } else if (newValue === null || newValue === 'false') {
           this.button.removeAttribute('disabled');
           this.button.style.cursor = 'pointer';
         }
