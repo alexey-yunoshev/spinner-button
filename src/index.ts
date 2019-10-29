@@ -157,8 +157,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
         container.style.minWidth = `${width}px`;
         container.style.width = `${width}px`;
         container.style.maxWidth = `${width}px`;
-        // I believe 2px are to make up for the border width
-        button.style.width = `${height + 2}px`;
+        button.style.width = `${height}px`;
         button.style.padding = '0px';
 
         const outerSpinnerSize = height * 0.8;
