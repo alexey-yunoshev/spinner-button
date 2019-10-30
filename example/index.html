@@ -9,6 +9,17 @@
       registerSpinnerButtonComponent();
       registerSpinnerButtonComponent('spinner-button');
   </script>
+  <style>
+    .my-style {
+      --spinner-button-background-color: black;
+      --spinner-button-background-color--disabled: black;
+      --spinner-button-border-color: #FF1569;
+      --spinner-button-text-color: #FF1569;
+      --spinner-button-text-color--disabled: #1F1F1F;
+      --spinner-button-inner-spinner-color: #FF1569;
+      --spinner-button-outer-spinner-color: #FF1569;
+    }
+  </style>
 </head>
 <body
     style="background-color:black;
@@ -17,8 +28,7 @@
            grid-gap: 20px">
 
 <app-spinner-button id="btn">Call api</app-spinner-button>
-<spinner-button primary-color="#c3003a" secondary-color="black" border-color="red">Submit</spinner-button>
-<spinner-button>A very long button</spinner-button>
+<spinner-button class="my-style">Submit</spinner-button>
 
 <script>
     document.getElementById('btn').addEventListener('click', () => {
