@@ -4,11 +4,7 @@
 
 [Codepen](https://codepen.io/alexey-yunoshev/pen/ZEEJmKJ)
 
-Attributes:
-* **primary-color** the color of the text. Default is white;
-* **secondary-color** the color of the background. Default is #1AAFD0;
-* **border-color** - the color of the border. Default is transparent;
-* **disabled** - if present, will make the button disabled
+
 ### Installation
 ```shell script
 $ npm install @ayunoshev/spinner-button
@@ -28,14 +24,26 @@ $ npm install @ayunoshev/spinner-button
       registerSpinnerButtonComponent();
       registerSpinnerButtonComponent('spinner-button');
   </script>
+  <style>
+    .my-style {
+      --spinner-button-background-color: black;
+      --spinner-button-background-color--disabled: black;
+      --spinner-button-border-color: #FF1569;
+      --spinner-button-text-color: #FF1569;
+      --spinner-button-text-color--disabled: #1F1F1F;
+      --spinner-button-inner-spinner-color: #FF1569;
+      --spinner-button-outer-spinner-color: #FF1569;
+    }
+  </style>
 </head>
-<body  style="background-color: black;
-              display: grid;
-              grid-template-columns: repeat(2, max-content);
-              grid-gap: 20px">
+<body
+    style="background-color:black;
+           display: grid;
+           grid-template-columns: repeat(3, max-content);
+           grid-gap: 20px">
 
-<app-spinner-button id="btn">call api</app-spinner-button>
-<spinner-button primary-color="#c3003a" secondary-color="black">submit</spinner-button>
+<app-spinner-button id="btn">Call api</app-spinner-button>
+<spinner-button class="my-style">Submit</spinner-button>
 
 <script>
     document.getElementById('btn').addEventListener('click', () => {
@@ -69,10 +77,6 @@ export class SomeModule {
 
 Inside some component template of that module:
 ```html
-<app-spinner-button [attr.disabled]="!form.valid"
-                    primary-color="var(--ic-color-text-medium)"
-                    secondary-color="var(--ic-color-secondary)">Submit
+<app-spinner-button [attr.disabled]="!form.valid">Submit
 </app-spinner-button>
 ```
-If we are not going to dynamically change the colors, then there's no need to bind
-the attributes.

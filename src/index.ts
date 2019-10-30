@@ -1,14 +1,5 @@
 export function registerSpinnerButtonComponent(name: string = 'app-spinner-button') {
 
-  /**
-   * A spinner button
-   *
-   * primary-color - the color of the text. Default is white;
-   * secondary-color - the color of the background. Default is #1AAFD0;
-   * border-color - the color of the border. Default is transparet;
-   *
-   */
-
     // language=html
   const template = `
         <style>
@@ -18,17 +9,24 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
           }
 
           .container {
+            --_background-color: var(--spinner-button-background-color, #232f3e);
+            --_background-color--disabled: var(--spinner-button-background-color--disabled, #3b4b5a);
+            --_border-color: var(--spinner-button-border-color, transparent);
+            --_text-color: var(--spinner-button-text-color, #e5e5e5);
+            --_text-color--disabled: var(--spinner-button-text-color--disabled, #576a7c);
+            --_outer-spinner-color: var(--spinner-button-outer-spinner-color, #e5e5e5);
+            --_inner-spinner-color: var(--spinner-button-inner-spinner-color, #e5e5e5);
             display: grid;
             place-items: center;
             position: relative;
           }
 
           button {
-            background-color: var(--secondary-color);
-            border: 1px solid var(--border-color);
+            background-color: var(--_background-color);
+            border: 1px solid var(--_border-color);
             border-radius: 5px;
             cursor: pointer;
-            color: var(--primary-color);
+            color: var(--_text-color);;
             font-family: Roboto, "Helvetica Neue", sans-serif;
             font-size: 14px;
             font-weight: 600;
@@ -38,6 +36,11 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
             position: relative;
             transition: all 250ms, color 0s;
             width: 100%;
+          }
+
+          button[disabled] {
+            background-color: var(--_background-color--disabled);
+            color: var(--_text-color--disabled);
           }
 
           .active button {
@@ -56,7 +59,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
             top: 0;
             width: 0;
           }
-          
+
           .outer-spinner {
             animation: outer .6s linear infinite;
             border-radius: 50%;
@@ -70,22 +73,22 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
 
 
           .active .outer-spinner {
-            border-color: var(--primary-color) transparent var(--primary-color) transparent;
+            border-color: var(--_outer-spinner-color) transparent var(--_outer-spinner-color) transparent;
           }
-          
+
           .inner-spinner {
-              animation: inner 1s linear infinite;
-              border-style: solid;
-              border-width: 1px;
-              border-radius: 50%;
-              border-color: transparent;
-              display: block;
-              transition: all 450ms;
-              width: 0;
+            animation: inner 1s linear infinite;
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 50%;
+            border-color: transparent;
+            display: block;
+            transition: all 450ms;
+            width: 0;
           }
 
           .active .inner-spinner {
-              border-color: var(--primary-color) transparent var(--primary-color) transparent;
+            border-color: var(--_inner-spinner-color) transparent var(--_inner-spinner-color) transparent;
           }
 
           @keyframes outer {
@@ -106,20 +109,20 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
             }
           }
         </style>
-    
-       <div class="container">
-         <button>
-           <slot></slot>
-         </button>
-         <div class="spinner-wrapper">
-           <div class="outer-spinner">
-           </div>
-         </div>
-         <div class="spinner-wrapper">
-           <div class="inner-spinner">
-           </div>
-         </div>
-       </div>
+
+        <div class="container">
+          <button>
+            <slot></slot>
+          </button>
+          <div class="spinner-wrapper">
+            <div class="outer-spinner">
+            </div>
+          </div>
+          <div class="spinner-wrapper">
+            <div class="inner-spinner">
+            </div>
+          </div>
+        </div>
     `;
 
   class AppSpinnerButton extends HTMLElement {
@@ -176,23 +179,8 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
       button.addEventListener('click', reshape);
     }
 
-    updateProperties() {
-      this.style.setProperty(
-        '--primary-color',
-        this.getAttribute('primary-color') || 'white');
-      this.style.setProperty(
-        '--secondary-color',
-        this.getAttribute('secondary-color') || '#1AAFD0');
-      this.style.setProperty(
-        '--border-color',
-        this.getAttribute('border-color') || 'transparent');
-    }
 
-    connectedCallback() {
-      this.updateProperties();
-    }
-
-    static observedAttributes = ['primary-color', 'secondary-color', 'border-color', 'disabled'];
+    static observedAttributes = ['disabled'];
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
       if (name === 'disabled') {
@@ -203,8 +191,6 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
           this.button.removeAttribute('disabled');
           this.button.style.cursor = 'pointer';
         }
-      } else {
-        this.updateProperties();
       }
     }
 
