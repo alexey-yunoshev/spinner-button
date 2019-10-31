@@ -43,7 +43,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
             color: var(--_text-color--disabled);
           }
 
-          .active button {
+          [active] button {
             border-radius: 50%;
             border-color: transparent;
             color: transparent;
@@ -72,7 +72,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
           }
 
 
-          .active .outer-spinner {
+          [active] .outer-spinner {
             border-color: var(--_outer-spinner-color) transparent var(--_outer-spinner-color) transparent;
           }
 
@@ -87,7 +87,7 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
             width: 0;
           }
 
-          .active .inner-spinner {
+          [active] .inner-spinner {
             border-color: var(--_inner-spinner-color) transparent var(--_inner-spinner-color) transparent;
           }
 
@@ -126,70 +126,130 @@ export function registerSpinnerButtonComponent(name: string = 'app-spinner-butto
     `;
 
   class AppSpinnerButton extends HTMLElement {
+    container: HTMLDivElement;
     button: HTMLButtonElement;
+    outerSpinner: HTMLDivElement;
+    innerSpinner: HTMLDivElement;
+    spinnerWrappers: HTMLDivElement[];
+
+    height = 0;
+    width = 0;
 
     constructor() {
       super();
       const shadow = this.attachShadow({mode: 'open'});
-      const container = document.createElement('div');
-      container.innerHTML = template;
-      shadow.appendChild(container);
-      const button = container.getElementsByTagName('button')[0];
-      this.button = button;
-      const outerSpinner = container.getElementsByClassName('outer-spinner')[0] as HTMLDivElement;
-      const innerSpinner = container.getElementsByClassName('inner-spinner')[0] as HTMLDivElement;
-      const spinnerWrappers = Array.from(container.getElementsByClassName('spinner-wrapper') as HTMLCollectionOf<HTMLDivElement>);
+      this.container = document.createElement('div');
+      this.container.innerHTML = template;
+      shadow.appendChild(this.container);
+      this.button = this.container.getElementsByTagName('button')[0];
+      this.outerSpinner = this.container.getElementsByClassName('outer-spinner')[0] as HTMLDivElement;
+      this.innerSpinner = this.container.getElementsByClassName('inner-spinner')[0] as HTMLDivElement;
+      this.spinnerWrappers = Array.from(this.container.getElementsByClassName('spinner-wrapper') as HTMLCollectionOf<HTMLDivElement>);
+      this.button.addEventListener('click', this.activate.bind(this));
+    }
 
-      function reshape() {
-        container.classList.add('active');
-        const height = button.clientHeight;
-        const width = button.clientWidth;
-        spinnerWrappers.forEach((wrapper) => {
-          wrapper.style.minHeight = `${height}px`;
-          wrapper.style.height = `${height}px`;
-          wrapper.style.maxHeight = `${height}px`;
+    connectedCallback() {
+      this.height = this.button.clientHeight;
+      this.width = this.button.clientWidth;
+      const height = this.height;
+      // + 2 because of border width
+      const width = this.width + 2;
+      // important for the spinner to stay in the center
+      // if we don't do this, container size will change
+      this.container.style.minWidth = `${width}px`;
+      this.container.style.width = `${width}px`;
+      this.container.style.maxWidth = `${width}px`;
+      //
+      this.button.style.minHeight = `${height}px`;
+      this.button.style.maxHeight = `${height}px`;
+      //
+      // // important for transition to work
+      this.button.style.width = `${width}px`;
+      //
 
-          wrapper.style.minWidth = `${width}px`;
-          wrapper.style.width = `${width}px`;
-          wrapper.style.maxWidth = `${width}px`;
-        });
+    }
 
-        button.style.minHeight = `${height}px`;
-        button.style.maxHeight = `${height}px`;
-        // important for transition to work
-        button.style.width = `${width}px`;
-        // important for the spinner to stay in the center
-        // if we don't do this, container size will change
-        container.style.minWidth = `${width}px`;
-        container.style.width = `${width}px`;
-        container.style.maxWidth = `${width}px`;
-        button.style.width = `${height}px`;
-        button.style.padding = '0px';
-
-        const outerSpinnerSize = height * 0.8;
-        outerSpinner.style.height = `${outerSpinnerSize}px`;
-        outerSpinner.style.width = `${outerSpinnerSize}px`;
-
-        const innerSpinnerSize = height * 0.5;
-        innerSpinner.style.height = `${innerSpinnerSize}px`;
-        innerSpinner.style.width = `${innerSpinnerSize}px`;
-        button.removeEventListener('click', reshape);
+    activate() {
+      const hasAttributeActive = this.getAttribute('active');
+      if (hasAttributeActive === null) {
+        this.setAttribute('active', '');
       }
+      this.container.setAttribute('active', '');
 
-      button.addEventListener('click', reshape);
+      const height = this.height;
+      const width = this.width + 2;
+
+      this.spinnerWrappers.forEach((wrapper) => {
+        wrapper.style.minHeight = `${height}px`;
+        wrapper.style.height = `${height}px`;
+        wrapper.style.maxHeight = `${height}px`;
+
+        wrapper.style.minWidth = `${width}px`;
+        wrapper.style.width = `${width}px`;
+        wrapper.style.maxWidth = `${width}px`;
+      });
+
+      this.button.style.width = `${height}px`;
+      this.button.style.padding = '0px';
+
+      const outerSpinnerSize = height * 0.8;
+      this.outerSpinner.style.height = `${outerSpinnerSize}px`;
+      this.outerSpinner.style.width = `${outerSpinnerSize}px`;
+
+      const innerSpinnerSize = height * 0.5;
+      this.innerSpinner.style.height = `${innerSpinnerSize}px`;
+      this.innerSpinner.style.width = `${innerSpinnerSize}px`;
+      this.button.removeEventListener('click', this.activate);
+    }
+
+    disactivate() {
+      this.removeAttribute('active');
+      this.container.removeAttribute('active');
+
+      const width = this.width + 2;
+
+      this.button.style.width = `${width}px`;
+      this.button.style.padding = '9px 19px';
+
+      this.outerSpinner.style.height = `0px`;
+      this.outerSpinner.style.width = `0px`;
+
+      this.innerSpinner.style.height = `0px`;
+      this.innerSpinner.style.width = `0px`;
+
+      this.button.addEventListener('click', this.activate.bind(this));
+
+      // should wait for the spinner to disappear
+      // otherwise looks ugly
+      setTimeout(() => {
+        this.spinnerWrappers.forEach((wrapper) => {
+          wrapper.style.minHeight = `0px`;
+          wrapper.style.height = `0px`;
+          wrapper.style.maxHeight = `0px`;
+          wrapper.style.minWidth = `0px`;
+          wrapper.style.width = `0px`;
+          wrapper.style.maxWidth = `0px`;
+        });
+      }, 300);
     }
 
 
-    static observedAttributes = ['disabled'];
+    static observedAttributes = ['disabled', 'active'];
 
     attributeChangedCallback(name: string, oldValue: string, newValue: string) {
       if (name === 'disabled') {
         if (newValue !== null && newValue !== 'false') {
           this.button.setAttribute('disabled', '');
-          this.button.style.cursor = 'not-allowed';
+          this.button.style.cursor = 'default';
         } else if (newValue === null || newValue === 'false') {
           this.button.removeAttribute('disabled');
           this.button.style.cursor = 'pointer';
+        }
+      } else if (name === 'active') {
+        if (newValue !== null && newValue !== 'false') {
+          this.activate();
+        } else if (newValue === null || newValue === 'false') {
+          this.disactivate();
         }
       }
     }

@@ -11,6 +11,10 @@ $ npm install @ayunoshev/spinner-button
 ```
 
 ### Usage
+To stylize, pass some or all of the custom properties from the first example.
+To activate spinner programmatically, use method `activate()`, to stop spinning -
+`desactivate()`. See [Codepen](https://codepen.io/alexey-yunoshev/pen/ZEEJmKJ)
+
 
 #### With ES modules
 ```html
